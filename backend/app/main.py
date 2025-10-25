@@ -22,6 +22,13 @@ app.include_router(item_router)
 logger.info("API routers registered.")
 
 
+@app.get("/ping")
+async def ping():
+    """Health check endpoint"""
+    return {
+        "status": "ok",
+        "message": "pong"
+    }
 
 @app.get("/", include_in_schema=False)
 def redirect_to_docs():
