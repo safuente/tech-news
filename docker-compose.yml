@@ -51,13 +51,13 @@ services:
       until redis-cli -h redis ping > /dev/null 2>&1; do sleep 1; done &&
       echo '✅ Servicios listos!' &&
       echo '🚀 Iniciando FastAPI...' &&
-      uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+      uvicorn main:app --host 0.0.0.0 --port 9000 --reload
       "
     volumes:
       - ./backend/app:/app:cached
       - ./backend/pyproject.toml:/app/pyproject.toml:ro
     ports:
-      - "${BACKEND_PORT:-8000}:8000"
+      - "${BACKEND_PORT:-9000}:9000"
     depends_on:
       db:
         condition: service_healthy

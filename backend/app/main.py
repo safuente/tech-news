@@ -27,7 +27,7 @@ async def ping():
     """Health check endpoint"""
     return {
         "status": "ok",
-        "message": "pong"
+        "message": "pang"
     }
 
 @app.get("/", include_in_schema=False)
