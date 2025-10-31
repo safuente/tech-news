@@ -1,0 +1,95 @@
+<div class="news-dashboard">
+  <!-- Header -->
+  <header class="dashboard-header">
+    <div class="header-content">
+      <div class="logo-section">
+        <div class="logo">📰</div>
+        <div class="title-section">
+          <h1 class="main-title">News Flow</h1>
+          <p class="subtitle">Stay updated with the latest stories</p>
+        </div>
+      </div>
+      <div class="status-badge" [ngClass]="{'cached': fromCache}">
+        <span class="status-icon">{{ fromCache ? '📦' : '🌐' }}</span>
+        <span class="status-text">{{ fromCache ? 'Cached' : 'Live' }}</span>
+      </div>
+    </div>
+  </header>
+
+  <!-- Category Filter -->
+  <div class="category-filter">
+    <button
+      *ngFor="let category of categories"
+      [ngClass]="{'active': category === selectedCategory}"
+      (click)="onCategoryChange(category)"
+      class="category-btn">
+      <span class="category-icon">{{ getCategoryIcon(category) }}</span>
+      <span class="category-name">{{ category }}</span>
+    </button>
+  </div>
+
+  <!-- Error Message -->
+  <div *ngIf="error" class="error-banner">
+    <span class="error-icon">⚠️</span>
+    <span>{{ error }}</span>
+  </div>
+
+  <!-- Loading State -->
+  <div *ngIf="loading" class="loading-state">
+    <div class="spinner"></div>
+    <p>Loading fresh news...</p>
+  </div>
+
+  <!-- News Grid -->
+  <div *ngIf="!loading && articles.length > 0" class="news-grid">
+    <article *ngFor="let article of articles" class="news-card">
+
+      <!-- Image -->
+      <div class="card-image">
+        <img
+          [src]="article.image_url || 'https://images.unsplash.com/photo-1504711434969-e33886168f5c?w=800&h=400&fit=crop'"
+          [alt]="article.title"
+          loading="lazy">
+        <div class="image-overlay">
+          <span class="category-badge">
+            {{ getCategoryIcon(article.category) }} {{ article.category }}
+          </span>
+        </div>
+      </div>
+
+      <!-- Content -->
+      <div class="card-content">
+        <div class="card-meta">
+          <span class="source">{{ article.source }}</span>
+          <span class="separator">•</span>
+          <span class="time">{{ getTimeAgo(article.published_at) }}</span>
+        </div>
+
+        <h2 class="card-title">{{ article.title }}</h2>
+
+        <p class="card-description">
+          {{ article.description || 'Read the full article for more details...' }}
+        </p>
+
+        <div class="card-footer">
+          <div class="author" *ngIf="article.author">
+            <span class="author-icon">✍️</span>
+            <span class="author-name">{{ article.author }}</span>
+          </div>
+
+          <a [attr.href]="article.url" target="_blank" rel="noopener noreferrer" class="read-more">
+            Read Article <span class="arrow">→</span>
+          </a>
+        </div>
+      </div>
+
+    </article>
+  </div>
+
+  <!-- Empty State -->
+  <div *ngIf="!loading && articles.length === 0" class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h3>No news available</h3>
+    <p>Try selecting a different category</p>
+  </div>
+</div>

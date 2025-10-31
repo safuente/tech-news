@@ -1,249 +1,143 @@
-# FastAPI Template Starter
+# 🚀 News Flow
 
-A production-ready FastAPI starter template with PostgreSQL, Docker integration, and modern Python tooling.
+Modern news dashboard with **FastAPI**, **Angular**, **Redis**, and **PostgreSQL**.
 
----
-
-## 🚀 Features
-
-- **FastAPI** project structure ready for medium and large-scale applications
-- **PostgreSQL** database (via Docker) with **Alembic** for migrations
-- **uv** for fast dependency management
-- **Ruff** for linting and code formatting (replaces Black, Flake8, isort)
-- **Hot-reload** support with watchfiles for development on macOS/Linux/Windows
-- **Environment variables** handled via `.env` and `python-dotenv`
-- **Docker Compose** setup for running the app and database
-- **Makefile** with useful shortcuts for development
-- **Structured logging** included
-- **Base service pattern** for clean CRUD operations
+![Tech Stack](https://img.shields.io/badge/FastAPI-009688?style=flat&logo=fastapi&logoColor=white)
+![Angular](https://img.shields.io/badge/Angular-DD0031?style=flat&logo=angular&logoColor=white)
+![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 
 ---
 
-## ⚙️ Requirements
+## ✨ Features
 
-- **Docker** (Desktop or Rancher Desktop)
-- **Make** (recommended for command shortcuts)
-- **Python 3.12+** (optional, for local execution without Docker)
+- 📰 Real-time news from NewsAPI
+- 🚀 Redis caching for performance
+- 🎨 Modern gradient UI design
+- 📱 Fully responsive
+- ⚡ Auto-refresh every 5 minutes
+- 🏷️ 6 news categories
+
+---
+
+## 🚀 Quick Start
+
+### Prerequisites
+- Docker Desktop
+- NewsAPI key from [newsapi.org](https://newsapi.org)
+
+### Setup
+```bash
+# 1. Clone repository
+git clone <repo-url>
+cd news-dashboard
+
+# 2. Configure environment
+cp .env.example .env
+nano .env  # Add your NEWS_API_KEY
+
+# 3. Start services
+docker-compose up 
+
+# 4. Access application
+# Frontend: http://localhost:4300
+# Backend:  http://localhost:9000/docs
+```
+
+---
+
+## 🏗️ Architecture
+```
+Angular (4300) ──→ FastAPI (9000) ──→ NewsAPI
+                      ↓
+                   Redis Cache
+                      ↓
+                  PostgreSQL
+```
 
 ---
 
 ## 📁 Project Structure
-
 ```
-.
-├── app/
-│   ├── core/              # Core configuration (database, settings, logger)
-│   ├── models/            # SQLAlchemy models
-│   ├── schemas/           # Pydantic schemas
-│   ├── services/          # Business logic layer
-│   ├── routers/           # API endpoints
-│   ├── migrations/        # Alembic migrations
-│   └── main.py            # FastAPI application entry point
-├── docker-compose.yml
-├── Dockerfile
-├── pyproject.toml         # Dependencies and tool configuration
-├── uv.lock               # Locked dependencies
-├── Makefile              # Development commands
-└── .env                  # Environment variables
+news-dashboard/
+├── backend/              # FastAPI
+│   ├── app/
+│   │   ├── core/        # Config, Redis, Logger
+│   │   ├── routers/     # API endpoints
+│   │   ├── services/    # Business logic
+│   │   └── main.py
+│   └── Dockerfile
+├── frontend/            # Angular
+│   ├── src/app/
+│   │   └── features/news/
+│   └── Dockerfile
+└── docker-compose.yml
 ```
 
 ---
 
-## 🧩 Environment Setup
+## 🔧 Configuration
 
-Create a `.env` file in the project root:
-
+Key environment variables in `.env`:
 ```env
-POSTGRES_USER=postgres
-POSTGRES_PASSWORD=postgres
-POSTGRES_DB=mydatabase
-POSTGRES_HOST=db
-POSTGRES_PORT=5432
+NEWS_API_KEY=your_api_key_here
+POSTGRES_PASSWORD=news_password
+CACHE_TTL_NEWS=180
+BACKEND_PORT=8000
+FRONTEND_PORT=4300
 ```
-
-You can also use the provided `.env.example` as a template.
 
 ---
 
-## ▶️ Run the Local Environment
-
-Start the containers (FastAPI + PostgreSQL):
-
+## 📡 API Endpoints
 ```bash
-make up
+# Health
+GET  /ping
+GET  /health
+
+# News
+GET  /api/news/?category=technology&page=1&page_size=6
+GET  /api/news/categories
+POST /api/news/refresh
+GET  /api/news/metrics
 ```
 
-Once the command completes, open your browser at:
-👉 [http://localhost:8000](http://localhost:8000)
-
-You'll be redirected to the FastAPI interactive docs (Swagger UI).
-
-### Hot-Reload Development
-
-The application supports hot-reload when you modify Python files:
-- Edit any `.py` file in the `app/` directory
-- Save the file
-- The server automatically reloads with your changes
-
 ---
 
-## 🧰 Useful Makefile Commands
-
-| Command | Description |
-|----------|--------------|
-| `make up` | Start the environment in the foreground |
-| `make upd` | Start the environment in detached mode |
-| `make down` | Stop and remove containers |
-| `make stop` | Stop containers without removing them |
-| `make build` | Force rebuild Docker images |
-| `make rm` | Remove stopped containers |
-| `make test` | Run unit tests using pytest |
-| `make lint` | Run Ruff linter with auto-fix |
-| `make format` | Format code with Ruff |
-| `make bash` | Open a bash shell inside the app container |
-| `make init-migrations` | Initialize Alembic migrations folder |
-| `make migrate msg="message"` | Create a new Alembic migration |
-| `make exec-migration` | Apply pending migrations |
-| `make migrate-up` | Wait for DB and run migrations automatically |
-
----
-
-## 🧱 Database Migrations
-
-### Initialize Alembic (first time only)
-
+## 🐳 Docker Commands
 ```bash
-make init-migrations
+# Start
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop
+docker-compose down
+
+# Rebuild
+docker-compose build
+
+# Clean up
+docker-compose down -v
 ```
 
-### Generate a New Migration
-
-```bash
-make migrate msg="add users table"
-```
-
-### Apply Migrations
-
-```bash
-make exec-migration
-```
-
-Migrations are automatically applied when starting the app with `make up`.
 
 ---
 
-## 🧪 Run Tests
+## 📊 Available Categories
 
-Execute all unit tests using pytest:
-
-```bash
-make test
-```
-
----
-
-## 🧼 Code Quality
-
-### Run Linter
-
-```bash
-make lint
-```
-
-This runs `ruff check --fix` to find and automatically fix code issues.
-
-### Format Code
-
-```bash
-make format
-```
-
-This runs `ruff format` to ensure consistent code style.
-
-### Configuration
-
-Ruff is configured in `pyproject.toml` with:
-- Line length: 100 characters
-- Python 3.12+ target
-- Automatic import sorting
-- Per-file ignores for `__init__.py` and migration files
-
----
-
-## 🏗️ Base Service Pattern
-
-The template includes a generic `BaseService` class for CRUD operations:
-
-```python
-from services.base import BaseService
-from models.item import Item
-
-class ItemService(BaseService):
-    def __init__(self, db: Session):
-        super().__init__(db, Item)
-
-# Provides: create_item, list_items, get_item, update_item, delete_item
-```
-
----
-
-## 🐳 Docker Details
-
-### PostgreSQL
-
-- Image: `postgres:15`
-- Port: `5432`
-- Health checks included
-- Persistent volume: `postgres_data`
-
-### FastAPI App
-
-- Python: `3.12-slim`
-- Package manager: `uv` (faster than pip)
-- Hot-reload enabled with `watchfiles`
-- Working directory: `/app`
-
----
-
-## 🧠 Notes
-
-- **Hot-reload on macOS**: Configured with `WATCHFILES_FORCE_POLLING=true` for reliable file change detection
-- **Database connection**: Waits for PostgreSQL to be ready before starting
-- **Migrations**: Automatically applied on container startup
-- **Environment variables**: Loaded from `.env` file in both local and Docker environments
-- **Primary keys**: BaseService automatically detects primary key names using SQLAlchemy inspection
-
----
-
-## 🔧 Dependencies
-
-Main dependencies (defined in `pyproject.toml`):
-
-- **fastapi** - Modern web framework
-- **uvicorn** - ASGI server with WebSockets support
-- **sqlalchemy** - ORM for database operations
-- **alembic** - Database migration tool
-- **psycopg2-binary** - PostgreSQL adapter
-- **python-dotenv** - Environment variable management
-- **watchfiles** - File system monitoring for hot-reload
-
-Dev dependencies:
-
-- **ruff** - Fast Python linter and formatter
-- **pytest** - Testing framework
-
----
-
-## 🏁 Getting Started
-
-1. Clone the repository
-2. Copy `.env.example` to `.env` and configure
-3. Run `make up` to start the environment
-4. Visit [http://localhost:8000](http://localhost:8000)
-5. Start building your API! 🚀
+- 💻 Technology
+- 💼 Business
+- 🔬 Science
+- 🏥 Health
+- ⚽ Sports
+- 🎬 Entertainment
 
 ---
 
 ## 📝 License
 
-This template is open source and available for use in your projects.
+MIT License - see [LICENSE](LICENSE)
+
+---
