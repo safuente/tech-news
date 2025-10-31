@@ -7,6 +7,9 @@ Modern news dashboard with **FastAPI**, **Angular**, **Redis**, and **PostgreSQL
 ![Redis](https://img.shields.io/badge/Redis-DC382D?style=flat&logo=redis&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-316192?style=flat&logo=postgresql&logoColor=white)
 
+
+![Demo de la app](assets/demo-news-flow.gif)
+
 ---
 
 ## ✨ Features
